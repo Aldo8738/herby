@@ -1,30 +1,26 @@
-from gpiozero import MCP3008
+import grovepi
 import time
 
-# Analog input pin
-ANALOG_PIN = 0
-
-# MCP3008 reference voltage (default: 3.3V)
-REFERENCE_VOLTAGE = 3.3
-
-# Calibration factor for converting sensor value to TDS (adjust as needed)
-CALIBRATION_FACTOR = 0.5
-
-# Initialize MCP3008 ADC
-adc = MCP3008(channel=ANALOG_PIN)
+# Connect the Grove TDS sensor to the appropriate analog Grove socket
+sensor = 0  # Change the socket number (0, 1, 2, or 3) as per the connection
 
 while True:
-    # Read analog value from the sensor
-    analog_value = adc.value
+    try:
+        # Read the sensor value
+        sensor_value = grovepi.analogRead(sensor)
 
-    # Convert analog value to voltage
-    voltage = analog_value * REFERENCE_VOLTAGE
+        # Convert sensor value to TDS using calibration factor (adjust as needed)
+        calibration_factor = 0.5
+        tds = sensor_value * calibration_factor
 
-    # Convert voltage to TDS using calibration factor
-    tds = voltage * CALIBRATION_FACTOR
+        # Print the TDS value
+        print(f"TDS: {tds:.2f} ppm")
 
-    # Print the TDS value
-    print(f"TDS: {tds:.2f} ppm")
+        # Delay before next reading
+        time.sleep(1)
 
-    # Delay before next reading
-    time.sleep(1)
+    except KeyboardInterrupt:
+        break
+
+    except IOError:
+        print("Error: Failed to read sensor data.")
