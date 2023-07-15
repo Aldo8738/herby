@@ -1,28 +1,26 @@
-from gpiozero import MCP3008
 import time
+import smbus2
 
-# Analog input pin (channel)
-ANALOG_PIN = 0
+# I2C address of the Grove TDS sensor
+TDS_SENSOR_ADDR = 0x0f
 
-# Calibration factor for converting sensor value to TDS (adjust as needed)
-CALIBRATION_FACTOR = 0.5
+# I2C bus number (Raspberry Pi 3A+ uses bus 1)
+I2C_BUS = 1
 
-# Initialize MCP3008 ADC
-adc = MCP3008(channel=ANALOG_PIN)
+def read_tds():
+    with smbus2.SMBus(I2C_BUS) as bus:
+        # Read TDS data from the Grove TDS sensor
+        data = bus.read_i2c_block_data(TDS_SENSOR_ADDR, 0, 2)
+        tds = (data[0] << 8) | data[1]
+        return tds
 
-while True:
-    try:
-        # Read analog value from the sensor
-        sensor_value = adc.value
+def main():
+    print("Detecting TDS...")
 
-        # Convert analog value to TDS using calibration factor
-        tds = sensor_value * CALIBRATION_FACTOR
-
-        # Print the TDS value
-        print(f"TDS: {tds:.2f} ppm")
-
-        # Delay before next reading
+    while True:
+        tds_value = read_tds()
+        print(f"TDS Value: {tds_value:.2f} ppm")
         time.sleep(1)
 
-    except KeyboardInterrupt:
-        break
+if __name__ == '__main__':
+    main()
