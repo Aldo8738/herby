@@ -1,21 +1,20 @@
 import time
-from w1thermsensor import W1ThermSensor
-
-# Create an instance of the DS18B20 temperature sensor
-sensor = W1ThermSensor()
-
-def read_temperature():
-    # Read the temperature from the DS18B20 sensor
-    temperature = sensor.get_temperature()
-    return temperature
-
+import seeed_dht
 def main():
-    print("Detecting Temperature...")
 
+    # for DHT11/DHT22
+    sensor = seeed_dht.DHT("11", 12)
+    # for DHT10
+    # sensor = seeed_dht.DHT("10")
+    
     while True:
-        temperature_value = read_temperature()
-        print(f"Temperature: {temperature_value:.2f}°C")
+        humi, temp = sensor.read()
+        if not humi is None:
+            print('DHT{0}, humidity {1:.1f}%, temperature {2:.1f}*'.format(sensor.dht_type, humi, temp))
+        else:
+            print('DHT{0}, humidity & temperature: {1}'.format(sensor.dht_type, temp))
         time.sleep(1)
+
 
 if __name__ == '__main__':
     main()
