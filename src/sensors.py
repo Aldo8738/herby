@@ -82,7 +82,7 @@ def display_light_level(light_data):
 
 # Grove - 16x2 LCD RGB Backlight connected to I2C port
 lcd = JHD1802()
-lcd.setCursor(0, 0)
+lcd.setCursor(0, 0) #
 lcd.write('fuck Herby!')
 
 # Global variables to hold the sensor values
