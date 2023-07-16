@@ -72,7 +72,7 @@ def main():
             next_light_check = current_time + light_check_interval
 
         time.sleep(1)
-        lcd.write(format(lightLevel, '.2f'))
+        # lcd.write(format(lightLevel, '.2f'))
 
 
 if __name__ == '__main__':
